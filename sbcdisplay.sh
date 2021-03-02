@@ -8,11 +8,12 @@
 #######################################################################################################
 
 dependencies=(firefox nc)
-url="http://localhost:4316/stage"
+url="http://10.0.0.164:4316/stage"
+log="./sbclog"
 
 errorcheck(){
     if [ $? -ne 0 ]; then 
-	printf " An error was encountered.\n Please install $i before continuing\n"
+	printf " An error was encountered.\n Please install $i before continuing\n" >> $log
 	exit
     fi
 return
