@@ -6,14 +6,21 @@
 # Date: 1MAR2021                                                                                      #
 # Revision: 1.0                                                                                       #
 #######################################################################################################
+#Note: add the below to a crontab running in the user context. 
+# @reboot export DISPLAY=:0 && sleep 30 && /home/pi/Desktop/sbcdisplay.sh
+# @reboot runs the script at boot 
+# export DISPLAY=:0 sets the display variable for a non-x terminal session
+# sleep 30 allows for network and other services to load before checking connectivity
+# path to your script 
+######################################################################################################
 
 dependencies=(firefox nc)
 url="http://10.0.0.164:4316/stage"
-log="./sbclog"
+log="./Desktop/sbclog"
 
 errorcheck(){
     if [ $? -ne 0 ]; then 
-	printf " An error was encountered.\n Please install $i before continuing\n" >> $log
+	printf "$date  An error was encountered.\n Please install $i before continuing\n" >> $log
 	exit
     fi
 return
@@ -21,7 +28,7 @@ return
 
 depcheck(){
 for i in "${dependencies[@]}"; do
-    which "$i"
+    which "$i" 1>/dev/null
     errorcheck $i
     done
 
@@ -29,7 +36,7 @@ for i in "${dependencies[@]}"; do
 
 checkconn(){
 nc -z 8.8.8.8 53
-if [ $(echo $0) -ne 0 ]; then
+if [ $(echo $?) -ne 0 ]; then
     printf "Basic connectivity check failed. Please check connectivity.\n"
     exit
 fi
